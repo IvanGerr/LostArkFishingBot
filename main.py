@@ -1,13 +1,17 @@
 import numpy
+import serial
 import pyautogui
 import cv2
 import time
 from time import gmtime, strftime
 import random
-import win32gui
+#import win32gui
 
+# py -m PyInstaller --add-data "resources;resources" main.py
 # screen resolution
 screenWidth, screenHeight= pyautogui.size()
+
+ser = serial.Serial('COM4', 9600)
 
 # Backup hardcoded width and height
 #screenWidth = 2560
@@ -23,9 +27,7 @@ def castFishingRod(count):
     print(strftime("%H:%M:%S", gmtime()), f"Casting fishing rod. Counter: {count}")
 
     # Cast fishing rod ingame
-    pyautogui.keyDown('e')
-    time.sleep( random.uniform( 0.25, 0.55 ))
-    pyautogui.keyUp('e')
+    ser.write('e'.encode('utf-8'))
     time.sleep( random.uniform(4.5, 6.5))
 
 # Function with all steps to repair the fishing rod through the pet inventory
@@ -114,7 +116,7 @@ while(1):
 
     # search pattern on screen for exclamation point
     template_coordinates = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
-    loc = numpy.where( template_coordinates >= 0.7)
+    loc = numpy.where( template_coordinates >= 0.8)
 
     # Based on the search results, either E is pressed or nothing happens and the cycle repeats
     if len(loc[0]) > 0 and flag == "thrown":
@@ -123,29 +125,19 @@ while(1):
         time.sleep(random.uniform(0.25, 1.0))
 
         # Caught fish, press e ingame to reel it in
-        pyautogui.keyDown('e')
-        time.sleep( random.uniform( 0.25, 0.55 ))
-        pyautogui.keyUp('e')
+        ser.write('e'.encode('utf-8'))
 
         flag = "pulled"
-        time.sleep(random.uniform(5.5, 7.5))
+        time.sleep(random.uniform(7, 9))
 
     # Repair if modulo 50 and either found a fish, or fully idle
     if counter % 50 == 0 and (idletimer == 500 or flag == "pulled"):
         print(strftime("%H:%M:%S", gmtime()), f"Counter: {counter}. Repairing now. flag: {flag}")
-        repairFishingRod(screenWidth, screenHeight)
+        #repairFishingRod(screenWidth, screenHeight)
+        break
         counter = counter + 1
 
-    # search pattern on screen for buoy
-    poplavok_coordinates = cv2.matchTemplate(image, poplavok, cv2.TM_CCOEFF_NORMED)
-    poplavok_loc = numpy.where( poplavok_coordinates >= 0.7)
-    
-    if len(poplavok_loc[0]) == 0 and flag == "pulled":
-        castFishingRod(counter)
-        flag = "thrown"
-        counter = counter + 1
-
-    print(strftime("%H:%M:%S", gmtime()), f"Waiting for a fish. Idle timer: {idletimer}. Recast at 500. flag: {flag}")
+    #print(strftime("%H:%M:%S", gmtime()), f"Waiting for a fish. Idle timer: {idletimer}. Recast at 500. flag: {flag}")
 
     if idletimer == 500:
         print(f"Idle timer reached 500. Recasting now.")
@@ -155,3 +147,5 @@ while(1):
         castFishingRod(counter)
         flag = "thrown"
         counter = counter + 1
+    
+input()
