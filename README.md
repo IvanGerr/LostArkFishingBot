@@ -1,15 +1,9 @@
-﻿# Lost Ark Fishing bot release 1.4 hardware mod. 
+# Lost Ark Fishing bot release 1.4 hardware mod. 
 
-------------------------------------------------------------------------
-| ATTENTION: THIS IS FORKED BRANCH. DOES NOT WORK AS STANDALONE PROJECT.| 
-------------------------------------------------------------------------
+ATTENTION: THIS IS FORKED BRANCH. DOES NOT WORK AS STANDALONE PROJECT.
+
 
 # Game settings and key bindings
-* You only need the two standard key binds of:
-* E for fishing:\
-  ![alt text](https://i.imgur.com/zI3m8Bd.png)
-* ALT+P to open the pet inventory (for automatic repairs):\
-  ![alt text](https://i.imgur.com/L85XF6q.png)
 * Currently all resolutions with a height of 1080 or 1440 pixels are supports. If you have a different resolution that is required, just let me know.
 
 # Usage guide
